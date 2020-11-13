@@ -84,6 +84,13 @@ class Graph:
             else:
                 continue
 
+    def dft_util(self, vert, visit):
+        visit[vert] = True
+        print(vert)
+        for i in self.vertices[vert]:
+            if visit[i] == False:
+                self.dft_util(i, visit)
+
     def dft_recursive(self, starting_vertex):
         """
         Print each vertex in depth-first order
@@ -91,15 +98,10 @@ class Graph:
 
         This should be done using recursion.
         """
-        found = [False] * (len(self.vertices) + 1)
-        dfs_util(starting_vertex, found)
+        found = [False] * (max(self.vertices) + 1)
+        self.dft_util(starting_vertex, found)
 
-    def def_util(self, vert, visit):
-        visit[vert] = True
-        print(vert)
-        for i in self.vertices[vert]:
-            if visit[i] == False:
-                dfs_util(vert, visit)
+    
 
 
     def bfs(self, starting_vertex, destination_vertex):
@@ -108,7 +110,26 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        stack = deque()
+        found = set()
+        if starting_vertex not in self.vertices:
+            print("this vert does not exist")
+            return
+        stack.append([starting_vertex])
+        while stack:
+            currPath = stack.popleft()
+            currVert = currPath[-1]
+            if currVert == destination_vertex:
+                return currPath
+            if currVert not in found:
+                found.add(currVert)
+                print(currVert)
+                for i in self.vertices[currVert]:
+                    newPath = list(currPath)
+                    newPath.append(i)
+                    stack.append(newPath)
+            else:
+                continue
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -116,7 +137,31 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        stack = deque()
+        found = set()
+        if starting_vertex not in self.vertices:
+            print("this vert does not exist")
+            return
+        stack.append([starting_vertex])
+        while stack:
+            currPath = stack.pop()
+            currVert = currPath[-1]
+            if currVert == destination_vertex:
+                return currPath
+            if currVert not in found:
+                found.add(currVert)
+                for i in self.vertices[currVert]:
+                    newPath = list(currPath)
+                    newPath.append(i)
+                    stack.append(newPath)
+            else:
+                continue
+
+    def dfs_util(self, vert, visit, dest, path):
+        visit[vert] = True
+        for i in self.vertices[vert]:
+            if visit[i] == False:
+                return self.dfs_util(i, visit, dest, path)
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -126,7 +171,11 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        path = deque()
+        found = [False] * (len(self.vertices))
+        self.dfs_util(starting_vertex, found, destination_vertex, path)
+        return list(path)
+        
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
