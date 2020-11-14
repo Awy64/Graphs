@@ -19,11 +19,12 @@ Review
 def earliest_ancestor(ancestors, starting_node):
     graph = dict()
     answer = []
-    for i in ancestors:
-        if i in graph:
-            graph[i[0]].append(i[1])
+    for i in range(len(ancestors)):
+        parent, child = ancestors[i][0], ancestors[i][1]
+        if child in graph:
+            graph[child].append(parent)
         else:
-            graph[i[0]] = [i[1]]
+            graph[child] = [parent]
 
     stack = deque()
     found = set()
@@ -35,6 +36,8 @@ def earliest_ancestor(ancestors, starting_node):
         currVert = currPath[-1]
         if currVert not in found:
             found.add(currVert)
+            if currVert not in graph:
+                continue
             for i in graph[currVert]:
                 newPath = list(currPath)
                 newPath.append(i)
@@ -42,3 +45,8 @@ def earliest_ancestor(ancestors, starting_node):
                 if len(newPath) > len(answer):
                     answer = newPath
     return answer[-1]
+
+
+test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
+if __name__ == '__main__':
+    print(earliest_ancestor(test_ancestors, 6))
