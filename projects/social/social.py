@@ -80,7 +80,7 @@ class SocialGraph:
             print("This user does not exist.")
         stack.append([user_id])
         while stack:
-            currPath = stack.pop()
+            currPath = stack.popleft()
             currUser = currPath[-1]
             if currUser not in visited:
                 visited[currUser] = currPath
